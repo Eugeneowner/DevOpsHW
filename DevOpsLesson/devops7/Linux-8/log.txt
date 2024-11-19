@@ -1,0 +1,2 @@
+ls: cannot access '/rooooot': No such file or directory
+ls: cannot access '/rooooot': No such file or directory
