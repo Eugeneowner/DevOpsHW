@@ -150,6 +150,9 @@ echo "New log entry" | sudo tee -a /home/my.log
 
 
 Заданий #2:
+Моніторинг використання диска
+Напишіть сценарій і налаштуйте crontab для запуску цього сценарію, який перевірятиме використання вашого обсягу /, і якщо воно перевищує X відсотків (налаштовується в crontab), він записуватиме попереджувальне повідомлення у файл журналу /var/log/disk.log .
+
 •	Будет проверять загрузку диска /.
 •	Сравнивать её с порогом 75%.
 •	Записываем предупреждение в /var/log/disk.log, если порог превышен.
@@ -179,3 +182,44 @@ crontab -l
 grep CRON /var/log/syslog
 
 Заданий #3:
+Конфігурація Monit для моніторингу Nginx
+Створіть конфігурацію Monit для моніторингу служби nginx. Моніторинг повинен перевіряти, чи доступна служба на порту 80 локального хосту. Якщо служба все ще недоступна після семи перевірок, монітор припиняє спроби перезапуску.
+
+Установка Monit:
+sudo apt update
+sudo apt install monit -y
+
+Проверяем, что Monit работает:
+sudo systemctl status monit
+
+Перезапускаем Monit для применения изменений:
+sudo systemctl restart monit
+
+Создаем отдельный файл конфигурации для Nginx:
+sudo vim /etc/monit/conf.d
+
+check process nginx with pidfile /run/nginx.pid
+    start program = "/usr/sbin/service nginx start"
+    stop program  = "/usr/sbin/service nginx stop"
+
+    if failed port 80 protocol http
+        request /
+        with timeout 5 seconds
+    then restart
+
+    if 7 restarts within 7 cycles then unmonitor
+
+    Проверяем синтаксис конфигурации:
+    sudo monit -t
+
+    Если всё в порядке, перезагрузите Monit:
+    sudo systemctl restart monit
+
+    Проверка, что мониторинг работает
+    sudo monit status
+
+    Остановливаем nginx, чтобы протестировать:
+    sudo systemctl stop nginx
+
+    Если что-то пошло не так, проверяем логи Monit:
+    sudo tail -f /var/log/monit.log
