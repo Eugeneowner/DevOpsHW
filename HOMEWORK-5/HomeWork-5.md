@@ -116,6 +116,56 @@ else
   exit 1
 fi
 
+# Systemd service
+
+Write script which watching directory "~/watch". If it sees that there appeared a new file, it prints files content and rename it to *.back
+
+Write SystemD service for this script and make it running
+
+#!/bin/bash
+WATCH_DIR=~/watch
+mkdir -p "$WATCH_DIR"
+inotifywait -m -e create "$WATCH_DIR" | while read -r directory events filename;
+do
+if [I -f $WATCH_DIR/$filename" ]l; then
+echo "Новый файл обнаружен: $filename"
+echo
+"Содержимое файла:"
+cat "$WATCH_DIR/$filename"
+mv "$WATCH_DIR/$filename" "$WATCH_DIR/$filename.back"
+echo
+"Файл переименован в $filename.back"
+fi
+done
+
+Создайем файл для службы:
+
+[Unit]
+Description=Scan watch folder for new files
+After=network.target
+[Service]
+ExecStart=/root/watch/watch_dir.sh
+WorkingDirectory=/root/watch
+Restart=on-failure
+User=root
+Group=root
+StandardOutput=journal 
+StandardError=journal
+[Install]
+WantedBy=multi-user.target
+
+Перезагружаем SystemD для применения изменений
+
+sudo systemctl daemon-reload
+
+Запусткаем сервис:
+sudo systemctl start watchdir.service
+
+Проверяем, что сервис работает:
+sudo systemctl status watchdir.service
+
+Проверка журнала SystemD:
+journalctl -u watchdir.service -f
 
 
 

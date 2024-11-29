@@ -1,0 +1,232 @@
+DevOps home work #7.
+
+Заданий #1:
+Cоздания учетных записей:
+
+1.Выполните следующие команды для создания пользователей:
+sudo adduser dev1
+sudo adduser dev2
+sudo adduser dev3
+Проверьте, созданы ли пользователи:
+getent passwd dev1 dev2 dev3
+
+2.Создание групп:
+sudo groupadd developers
+sudo groupadd webmasters
+Проверка, созданы ли группы:
+getent group developers
+getent group webmasters
+
+•	sudo groupadd [имя_группы] — команда для создания новой группы.
+•	getent group [имя_группы] — проверяет, существует ли группа в системе.
+
+3.Добавление пользователей в группы:
+Добавление dev1 и dev2 в группу developers:
+sudo usermod -aG developers dev1
+sudo usermod -aG developers dev2
+Добавление dev3 в группу webmasters:
+sudo usermod -aG webmasters dev3
+Проверка, что пользователи успешно добавлены в группы:
+groups dev1
+groups dev2
+groups dev3
+•	usermod -aG [группа] [пользователь] — добавляет пользователя в указанную группу, сохраняя его принадлежность к другим группам (ключ -aG добавляет, а не перезаписывает группы).
+•	groups [пользователь] — отображает все группы, к которым принадлежит пользователь.
+
+4.Установка основной группы:
+sudo usermod -g developers dev1
+sudo usermod -g developers dev2
+Проверяем изменения:
+id dev1
+id dev2
+В выводе команды id поле gid (Group ID) должно указывать на группу developers.
+
+Объяснение:
+•	usermod -g [группа] [пользователь] — устанавливает указанную группу как основную (группа по умолчанию) для пользователя.
+•	Основная группа используется, когда пользователь создает файлы или запускает процессы.
+
+5.Создание домашних каталогов для пользователей:
+
+Проверяем, что каталоги отсутствуют:
+ls -ld /home/dev1 /home/dev2 /home/dev3
+Если каталогов нет, создайте их вручную:
+sudo mkdir -p /home/dev1
+sudo mkdir -p /home/dev2
+sudo mkdir -p /home/dev3
+
+Устанавливаем владельцев и группы для каждого каталога:
+sudo chown dev1:developers /home/dev1
+sudo chown dev2:developers /home/dev2
+sudo chown dev3:webmasters /home/dev3
+
+Проверяем, что права доступа настроены правильно:
+sudo chmod 750 /home/dev1
+sudo chmod 750 /home/dev2
+sudo chmod 750 /home/dev3
+
+Проверяем настройки каждого каталога:
+ls -ld /home/dev1 /home/dev2 /home/dev3
+•	mkdir -p — создает каталог, включая родительские, если они отсутствуют.
+•	chown [пользователь]:[группа] — устанавливает владельца и группу для каталога.
+•	chmod 750 — устанавливает права доступа: владелец может читать/записывать/выполнять, группа может читать/выполнять, другие не имеют доступа.
+
+6.Клонирования учетной записи пользователя dev1 и создания пользователя backupdev
+Создание пользователя backupdev
+sudo adduser backupdev
+
+Клонируйте домашний каталог dev1:
+Копируем содержимое домашнего каталога dev1 в каталог backupdev:
+sudo rsync -a /home/dev1/ /home/backupdev/
+
+Изменяем владельца каталога backupdev и его содержимого:
+sudo chown -R backupdev:backupdev /home/backupdev
+
+Проверяем результат:
+ls -la /home/backupdev
+Проверка, что права доступа настроены правильно:
+ls -ld /home/backupdev
+
+•	sudo adduser backupdev — создает нового пользователя с домашним каталогом по умолчанию.
+•	rsync -a — копирует файлы и каталоги с сохранением прав доступа, владельцев и временных меток.
+•	chown -R — рекурсивно изменяет владельца и группу для всего содержимого.
+
+7.Настроим каталог web_project в /home и предоставим группе developers доступ для чтения и записи.
+
+Создаем каталог web_project:
+sudo mkdir /home/web_project
+
+Проверяем, что каталог создан:
+ls -ld /home/web_project
+
+Назначаем группу developers владельцем
+Измените группу-владельца каталога:
+sudo chown :developers /home/web_project
+
+Проверяем, что группа изменена:
+ls -ld /home/web_project
+
+Настроим права доступа
+Предоставляем группе developers доступ для чтения и записи:
+sudo chmod 770 /home/web_project
+
+Проверяем, что права настроены правильно:
+ls -ld /home/web_project
+
+•	mkdir — создает каталог.
+•	chown :developers — меняет группу-владельца каталога на developers.
+•	chmod 770 — разрешает владельцу и группе читать, записывать и выполнять (доступ к другим запрещен).
+
+8.Чтобы создать файл my.log в /home и настроить его как “неизменяемый” (с возможностью только добавления).
+
+Создаем файл:
+sudo touch /home/my.log
+
+Проверяем, что файл создан:
+ls -l /home/my.log
+
+Настроим права доступа
+Ограничиваем доступ: только владелец может писать в файл:
+sudo chmod 644 /home/my.log
+
+Проверяем права доступа:
+ls -l /home/my.log
+
+Настроим “только добавление” (append-only)
+sudo chattr +a /home/my.log
+
+Проверяем, что атрибут установлен:
+lsattr /home/my.log
+
+Проверка:
+
+Попробуем открыть файл для редактирования (например, с помощью nano, vim) — вы не сможете удалять или изменять существующий текст.
+
+Содержимое можно командой, например:
+echo "New log entry" | sudo tee -a /home/my.log
+
+•	chattr +a — устанавливает атрибут “только добавление”. Файл нельзя редактировать, но можно добавлять новые строки.
+•	lsattr — отображает текущие атрибуты файлов.
+•	chmod 644 — разрешает чтение для всех, но запись только владельцу.
+
+
+Заданий #2:
+Моніторинг використання диска
+Напишіть сценарій і налаштуйте crontab для запуску цього сценарію, який перевірятиме використання вашого обсягу /, і якщо воно перевищує X відсотків (налаштовується в crontab), він записуватиме попереджувальне повідомлення у файл журналу /var/log/disk.log .
+
+•	Будет проверять загрузку диска /.
+•	Сравнивать её с порогом 75%.
+•	Записываем предупреждение в /var/log/disk.log, если порог превышен.
+
+
+#!/bin/bash
+
+# Лог-файл
+LOG_FILE="/var/log/disk.log"
+
+THRESHOLD=${1:-${THRESHOLD:-75}}
+
+USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+echo "Текущее использование диска: $USAGE%"
+
+if [ "$USAGE" -gt "$THRESHOLD" ]; then
+    # Записываем предупреждение в лог
+    echo "$(date): Предупреждение! ...: $USAGE%." >> "$LOG_FILE"
+fi
+
+Редактор crontab:
+crontab -e
+
+Для выполнения сценария, например, каждые 5 минут:
+*/5 * * * * /путь/к/скрипту.sh
+
+Проверка системного журнала:
+grep CRON /var/log/syslog   
+
+Чтобы убедиться, что задание crontab добавлено:
+crontab -l
+
+Чтобы убедиться, что задание crontab отработало:
+grep CRON /var/log/syslog
+
+Заданий #3:
+Конфігурація Monit для моніторингу Nginx
+Створіть конфігурацію Monit для моніторингу служби nginx. Моніторинг повинен перевіряти, чи доступна служба на порту 80 локального хосту. Якщо служба все ще недоступна після семи перевірок, монітор припиняє спроби перезапуску.
+
+Установка Monit:
+sudo apt update
+sudo apt install monit -y
+
+Проверяем, что Monit работает:
+sudo systemctl status monit
+
+Перезапускаем Monit для применения изменений:
+sudo systemctl restart monit
+
+Создаем отдельный файл конфигурации для Nginx:
+sudo vim /etc/monit/conf.d
+
+check process nginx with pidfile /run/nginx.pid
+    start program = "/usr/sbin/service nginx start"
+    stop program  = "/usr/sbin/service nginx stop"
+
+    if failed port 80 protocol http
+        request /
+        with timeout 5 seconds
+    then restart
+
+    if 7 restarts within 7 cycles then unmonitor
+
+    Проверяем синтаксис конфигурации:
+    sudo monit -t
+
+    Если всё в порядке, перезагрузите Monit:
+    sudo systemctl restart monit
+
+    Проверка, что мониторинг работает
+    sudo monit status
+
+    Остановливаем nginx, чтобы протестировать:
+    sudo systemctl stop nginx
+
+    Если что-то пошло не так, проверяем логи Monit:
+    sudo tail -f /var/log/monit.log
