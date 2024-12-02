@@ -216,3 +216,32 @@ Write SystemD service for this script and make it running
 https://drive.google.com/file/d/1iCOK_XrpnaERSqX1zooFdG5g6e0tpzhb/view?usp=drive_link
 
 Будь ласка, додайте скріншоти отриманих результатів, щоб ми могли відстежувати ваш прогрес і консультувати вас.
+
+
+Вариант cкрипта через while. 
+
+#!/bin/bash
+
+# Первая переменная для параметров — директория для наблюдения.
+WATCH_DIR=${1:-~/watch}
+
+# Вторая переменная для параметров —  для добавления суффикс .back.
+SUFFIX=${2:-.back}
+
+# Проверяем, что такая директория существует.
+mkdir -p "$WATCH_DIR"
+
+echo "Запущен мониторинг директории: $WATCH_DIR, файлы будут переименовываться с добавлением суффикса '$SUFFIX'."
+
+while true; do
+    for filename in "$WATCH_DIR"/*; do
+        if [[ -f "$filename" && ! "$filename" =~ $SUFFIX$ ]]; then
+            echo "Новый файл обнаружен: $(basename "$filename")"
+            echo "Содержимое файла:"
+            cat "$filename"
+            mv "$filename" "$filename$SUFFIX"
+            echo "Файл переименован в $(basename "$filename")$SUFFIX"
+        fi
+    done
+  sleep 2
+done
