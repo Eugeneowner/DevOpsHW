@@ -1,2 +1,16 @@
 Завдання: Vagrant
 По-перше, вам потрібно створити та ініціалізувати проект Vagrant. Це має бути проект на основі ubuntu. Налаштуйте файл Vagrant, щоб розкрутити одну віртуальну машину з публічною мережею та встановити nginx через ініціалізацію. Nginx має працювати на порту 82 (замініть порт на «sed» у підготовці). У результаті ви маєте відкрити сторінку nginx у своєму веб-переглядачі та побачити сторінку «Ласкаво просимо до nginx». (Або ви можете створити власну «сторінку привітання», якщо хочете :) )
+
+на рахунок VmFusion + Vagrant 
+1) install vagrant - https://developer.hashicorp.com/vagrant/install
+2) vagrant plugin install vagrant-vmware-desktop
+3) vagrant plugin list
+4) vagrant int bento/ubuntu-20.04
+5) vagrant box add bento/ubuntu-20.04 - select vmware_desktop
+6) install Install Vagrant VMware Utility - https://developer.hashicorp.com/vagrant/install/vmware
+7) vagrant up
+8) vagrant ssh
+Воно все запустило 
+Пустило по ssh 
+Але 
+погані новини цієї машини не видно у списку VmFusion - Virtual Machine Library
