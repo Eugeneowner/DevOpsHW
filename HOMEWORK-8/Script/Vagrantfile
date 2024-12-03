@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-20.04"
+  config.vm.network "public_network", bridge: "en0: WI-FI"
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get install -y nginx
+    sudo sed -i 's/listen 80 default_server;/listen 82 default_server;/' /etc/nginx/sites-available/default
+    echo '<h1>Home work is DONE!</h1>' | sudo tee /var/www/html/index.html
+    sudo systemctl restart nginx
+  SHELL
+  # Uncomment the block below to customize VirtualBox provider settings
+  # config.vm.provider "virtualbox" do |vb|
+  #   vb.gui = true
+  #   vb.memory = "1024"
+  # end
+end
