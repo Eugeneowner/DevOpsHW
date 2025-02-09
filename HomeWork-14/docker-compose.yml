@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      FLASK_ENV: production
+    ports:
+      - "8000:8000"  #Проброс 8000 порта наружу
+    restart: always
+    networks:
+      - my_network
+
+  nginx:
+    depends_on:
+      - app
+    image: nginx:latest
+    ports:
+      - "8080:8080"  
+    restart: always
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
