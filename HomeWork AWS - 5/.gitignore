@@ -1,0 +1,26 @@
+# .gitignore
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.crash/
+*.tfvars
+*.backup
+.terraform.lock.hcl
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# Sensitive Files
+*.pem
+*.key
+*.crt
+*.zip
+*.log
+
+# OS metadata
+.DS_Store
+Thumbs.db
