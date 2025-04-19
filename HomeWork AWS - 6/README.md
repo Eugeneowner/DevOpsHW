@@ -25,7 +25,7 @@ HomeWork AWS - 6/
     │       ├── outputs.tf
     │       └── variables.tf
     ├── outputs.tf
-    ├── providers.tf                   # ← AWS provider + S3 backend
+    ├── providers.tf                   # ← AWS provider
     ├── terraform.tfvars               # ← Значения переменных
     └── variables.tf
 ```
