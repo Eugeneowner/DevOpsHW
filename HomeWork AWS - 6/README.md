@@ -10,7 +10,6 @@
 
 ```
 HomeWork AWS - 6/
-├── eugene-ec2key.pem                  # ← Приватный SSH-ключ, если используется вручную
 ├── README.md                          # ← Данный файл
 ├── Screen                             # ← Лог работы
 └── src/
