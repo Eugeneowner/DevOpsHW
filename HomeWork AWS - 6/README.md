@@ -10,23 +10,24 @@
 
 ```
 HomeWork AWS - 6/
-├── README.md                          # ← Данный файл
-├── Screen                             # ← Лог работы
-└── src/
-    ├── ansible/
-    │   ├── inventory                  # ← генерируется Terraform
-    │   └── playbook-docker-nginx.yml  # ← Ansible Playbook
-    ├── inventory.tpl                  # ← Шаблон для inventory
-    ├── main.tf                        # ← Подключение модуля и resources
-    ├── modules/
-    │   └── compute/
-    │       ├── ec2.tf                 # ← EC2, SG, SSH key
-    │       ├── outputs.tf
-    │       └── variables.tf
-    ├── outputs.tf
-    ├── providers.tf                   # ← AWS provider
-    ├── terraform.tfvars               # ← Значения переменных
-    └── variables.tf
+├── README.md                         # ← Данный файл
+├── Screen                            # ← Лог работы (Скриншоты)
+├── src/
+│   ├── ansible/
+│   │   ├── inventory                 # ← Генерируется Terraform
+│   │   ├── private.key               # ← Генерируется Terraform
+│   │   └── playbook-docker-nginx.yml # ← Ansible Playbook
+│   ├── inventory.tpl                 # ← Щаблон для ansible/inventory
+│   ├── main.tf                       # ← Подключение модуля и resources
+│   ├── outputs.tf                    # ← Публичные IP EC2
+│   ├── providers.tf                  # ← AWS provider 
+│   ├── terraform.tfvars              # ← Значения переменных
+│   ├── variables.tf                  # ← Значения переменных
+│   └── modules/
+│       └── compute/
+│           ├── ec2.tf                # ← EC2, SG, SSH
+│           ├── outputs.tf            # ← Вывод IP и ключа
+│           └── variables.tf          # ← Переменные модуля
 ```
 
 ---
