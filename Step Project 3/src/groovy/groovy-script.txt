@@ -1,0 +1,62 @@
+pipeline {
+    agent {
+        label 'worker-node'
+    }
+    
+    parameters {
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/Eugeneowner/Step-Project-2-DevOps.git', description: 'URL of the repository')
+        string(name: 'REPO_BRANCH', defaultValue: 'master', description: 'Main brach of the repository')
+    }
+    
+    environment {
+        DOCKER_IMAGE = "Eugeneowner/step-project-3:latest"
+        DOCKER_REGISTRY_URL = "https://registry.hub.docker.com/"
+        DOCKER_CREDENTIALS_ID = "docker-token"
+    }
+    
+    stages {
+        stage('Clone the Repo') {
+            steps {
+               script {
+                    git url: "${REPO_URL}",
+                    branch: "${REPO_BRANCH}",
+                    credentialsId: 'github-ssh'
+                }
+            }
+        }
+        stage('Docker build') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}")
+                }
+            }
+        }
+        stage('Run tests') {
+            steps {
+               script {
+                    try {
+                        sh "docker run --rm ${DOCKER_IMAGE} test"
+                    } catch(Exception e) {
+                        currentBuild.result = "FAILURE"
+                        error("STOPPED PIPELINE. TESTS FAILED.")
+                    }
+                } 
+            }
+        }
+        
+        stage('Docker push') {
+            steps {
+                script {
+                    try {
+                        docker.withRegistry("${DOCKER_REGISTRY_URL}", "${DOCKER_CREDENTIALS_ID}") {
+                            docker.image("${DOCKER_IMAGE}").push()
+                        }
+                    } catch(Exception e) {
+                        currentBuild.result = "FAILURE"
+                        error("STOPPED PIPELINE. DOCKER LOGIN ERROR.")
+                    }
+                }
+            }
+        }
+    }
+}

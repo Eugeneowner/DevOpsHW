@@ -9,3 +9,11 @@ output "public_subnet_id" {
 output "private_subnet_id" {
   value = aws_subnet.private.id
 }
+
+output "nat_gateway_id" {
+  value = aws_nat_gateway.nat.id
+}
+
+output "nat_eip" {
+  value = aws_eip.nat_eip.public_ip
+}

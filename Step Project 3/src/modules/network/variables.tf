@@ -17,3 +17,8 @@ variable "private_subnet_cidr" {
 variable "az1" {
   type = string
 }
+variable "max_spot_price" {
+  type        = string
+  description = "Maximum price to pay per hour for spot instances"
+  default     = "0.1052"
+}
