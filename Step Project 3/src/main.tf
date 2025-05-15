@@ -18,6 +18,7 @@ data "aws_ami" "amazon-linux" {
   }
 }
 
+
 module "vpc" {
   source              = "./modules/network"
   owner               = var.owner
@@ -26,6 +27,7 @@ module "vpc" {
   private_subnet_cidr = var.private_subnet_cidr
   az1                 = var.az1
 }
+
 
 module "compute" {
   source            = "./modules/compute"
@@ -39,11 +41,13 @@ module "compute" {
   allowed_ports     = var.allowed_ports
 }
 
+
 resource "local_file" "ssh-key" {
   content         = module.compute.private_ssh_key
   filename        = "${path.module}/ansible/${var.private_ssh_key}"
   file_permission = "0400"
 }
+
 
 resource "local_file" "ansible_inventory" {
   content = templatefile("${path.module}/tpls/inventory.tpl", {
@@ -53,6 +57,7 @@ resource "local_file" "ansible_inventory" {
   })
   filename = "${path.module}/ansible/inventory"
 }
+
 
 resource "local_file" "nginx_default_conf" {
   content = templatefile("${path.module}/tpls/nginx-default-conf.tpl", {

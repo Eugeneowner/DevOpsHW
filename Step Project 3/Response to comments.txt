@@ -1,0 +1,29 @@
+resource "aws_instance" "jenkins_worker" {
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  subnet_id              = var.private_subnet_id
+  key_name               = aws_key_pair.generated.key_name
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+
+  dynamic "instance_market_options" {
+    for_each = var.worker_type == "spot" ? [1] : []
+    content {
+      market_type = "spot"
+
+      spot_options {
+        max_price = var.max_spot_price
+      }
+    }
+  }
+
+  tags = {
+    Name  = "Jenkins-Worker"
+    Owner = var.owner
+  }
+}
+
+variable "max_spot_price" {
+  type        = string
+  description = "Maximum price to pay per hour for spot instances"
+  default     = "0.1052"
+}

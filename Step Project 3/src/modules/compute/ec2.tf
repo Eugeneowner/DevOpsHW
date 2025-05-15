@@ -18,6 +18,7 @@ resource "aws_security_group" "ec2_sg" {
   #   protocol    = "tcp"
   #   cidr_blocks = ["0.0.0.0/0"]
   # }
+  
   dynamic "ingress" {
     for_each = var.allowed_ports
     content {
