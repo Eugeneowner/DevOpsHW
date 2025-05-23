@@ -11,7 +11,7 @@
 ```
 KUBERNETES HW 23/
 ├── .gitignore
-├── Screen/                # Скриншоты результата
+├── Screen/                
 └── src/
     ├── cluster.yml
     ├── nginx-pod.yml
