@@ -6,16 +6,19 @@
 
 ## Структура проекта
 
+<pre>
+<code>
+```
 KUBERNETES HW 23/
 ├── .gitignore
-├── Screen/              # возможно для скриншотов результата
+├── Screen/                # Скриншоты результата
 └── src/
     ├── cluster.yml
     ├── nginx-pod.yml
     └── nginx-service.yml
-
-
-    ---
+```
+</code>
+</pre>
 
 ## Команды:
 
