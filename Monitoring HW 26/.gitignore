@@ -1,0 +1,43 @@
+# MacOS системные файлы
+.DS_Store
+
+# IDE и редакторы
+.idea/
+.vscode/
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# Kubernetes config override
+.kube/
+*.kubeconfig
+
+# Файлы конфигурации Terraform/Ansible, если используешь
+*.tfstate
+*.tfvars
+*.key
+*.pem
+*.bak
+*.retry
+
+# Docker
+*.swp
+docker-compose.override.yml
+
+# Артефакты CI
+dist/
+build/
+node_modules/
+
+# Бинарные или архивы
+*.tar
+*.zip
+*.gz
+
+# Kubernetes
+.kube/
+*.yaml~
+*.yml~
+*.log
+*.bak
