@@ -1,0 +1,38 @@
+groups:
+- name: system_alerts
+  rules:
+    - alert: DiskSpaceLow
+      expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.15
+      for: 2m
+      labels:
+        severity: critical
+        receiver: telegram-notifications
+      annotations:
+        summary: "Low disk space on /"
+
+    - alert: CPUUsageHigh
+      expr: (100 - avg(irate(node_cpu_seconds_total{mode="idle"}[1m])) * 100) > 80
+      for: 1m
+      labels:
+        severity: warning
+        receiver: telegram-notifications
+      annotations:
+        summary: "High CPU usage detected"
+
+    - alert: TargetDown
+      expr: up == 0
+      for: 1m
+      labels:
+        severity: warning
+        receiver: telegram-notifications
+      annotations:
+        summary: "Prometheus target down"
+
+    - alert: AlwaysFiringTest
+      expr: vector(1)
+      for: 10s
+      labels:
+        severity: test
+        receiver: telegram-notifications
+      annotations:
+        summary: "Test alert, always firing"
